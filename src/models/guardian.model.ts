@@ -8,12 +8,24 @@ export interface IGuardianSection {
     pageSize: number;
     currentPage: number;
     pages: number;
-    orderBy: string;
-    results: Array<SectionResult>
+    edition: IEdition;
+    results: Array<ISectionResult>
   }
 }
 
-interface SectionResult {
+export interface ISection {
+  id: string;
+  webTitle: string;
+  webUrl: string;
+  apiUrl: string;
+  editions: Array<IEdition>;
+}
+
+export interface IEdition extends ISection {
+  code: string;
+}
+
+export interface ISectionResult {
   id: string;
   type: string;
   sectionId: string;
