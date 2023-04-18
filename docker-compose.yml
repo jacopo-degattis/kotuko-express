@@ -1,0 +1,45 @@
+version: '3.1'
+
+services:
+
+  db:
+    image: mysql:latest
+    restart: always
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE_NAME}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    ports:
+      - 3306:3306
+    volumes:
+      - dbdata:/data/db
+    expose:
+      - 3306
+
+  server:
+    container_name: guardian-rss-feed
+    image: guardian-rss
+    build:
+      context: .
+      dockerfile: Dockerfile
+    expose:
+      - ${PORT}
+    ports:
+      - ${PORT}:${PORT}
+    env_file:
+      - .env
+    environment:
+      PORT: ${PORT}
+      GUARDIAN_ENDPOINT: ${GUARDIAN_ENDPOINT}
+      GUARDIAN_API_KEY: ${GUARDIAN_API_KEY}
+    links:
+      - db
+    depends_on:
+      - db
+    volumes:
+      - ./:/usr/src/app
+    restart: unless-stopped
+
+volumes:
+  dbdata:
+    driver: local
