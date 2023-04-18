@@ -1,8 +1,9 @@
 import axios, { AxiosInstance } from 'axios';
-import { IGuardianSection } from '../models/guardian.model';
+import xml2js, { Builder } from 'xml2js';
 
 class GuardianService {
 
+  builder: Builder;
   axiosInstance: AxiosInstance;
 
   constructor() {
@@ -14,12 +15,19 @@ class GuardianService {
       params: { 'api-key': process.env.GUARDIAN_API_KEY },
       baseURL: process.env.GUARDIAN_ENDPOINT
     })
+    this.builder = new xml2js.Builder({
+      xmldec: { version: '1.0' }
+    })
   }
 
   async getSection(section: string) {
-    return await this.axiosInstance.get('/search', {
+    return await this.axiosInstance.get(`/${section}`, {
       params: { section }
     })
+  }
+
+  async asXML(xmlConfig: unknown) {
+    return this.builder.buildObject(xmlConfig);
   }
 
 }
