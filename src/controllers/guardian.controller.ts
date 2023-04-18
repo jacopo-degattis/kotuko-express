@@ -8,13 +8,14 @@ const guardian = new GuardianService();
 export async function get(req: Request, res: Response) {
   try {
 
-    if (!req.params.section.match(/^\p{L}+(?:[- ']\p{L}+)*$/u)) {
+    if (!req.params.section.match(/^[a-z]+(?:[- '][a-z]+)*$/u)) {
       logger.log(
         'error', `${req.params.section} a an invalid input, you must provide a dash separated or single word`
       );
 
       return res
         .status(400)
+        .setHeader('Content-Type', 'text/html')
         .send('You must provide a dash separated word or a single word');
     }
 
