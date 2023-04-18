@@ -1,9 +1,10 @@
 import axios, { AxiosInstance } from 'axios';
 import xml2js, { Builder } from 'xml2js';
+import moment from 'moment';
 
 class GuardianService {
 
-  builder: Builder;
+  xmlBuilder: Builder;
   axiosInstance: AxiosInstance;
 
   constructor() {
@@ -15,9 +16,20 @@ class GuardianService {
       params: { 'api-key': process.env.GUARDIAN_API_KEY },
       baseURL: process.env.GUARDIAN_ENDPOINT
     })
-    this.builder = new xml2js.Builder({
+    this.xmlBuilder = new xml2js.Builder({
       xmldec: { version: '1.0' }
     })
+  }
+
+  // Extract words from sentence with the given `wordLength`
+  extractWordle(wordLength: number, sentence: string) {
+    const words = sentence.split(' ');
+    return words.filter((word) => word.length === wordLength);
+  }
+
+  // Convert API date to RFC-822 standard
+  convertDateToRFC(date: string): string {
+    return moment(date).format('ddd, DD MMM YYYY HH:mm:ss ZZ');
   }
 
   async getSection(section: string) {
@@ -27,7 +39,7 @@ class GuardianService {
   }
 
   async asXML(xmlConfig: unknown) {
-    return this.builder.buildObject(xmlConfig);
+    return this.xmlBuilder.buildObject(xmlConfig);
   }
 
 }
