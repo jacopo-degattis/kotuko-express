@@ -33,9 +33,19 @@ class GuardianService {
   }
 
   async getSection(section: string) {
-    return await this.axiosInstance.get(`/${section}`, {
-      params: { section }
-    })
+    // Needed to perform HTTP request inside of Jest, otherwise it tries to make a request
+    // to `http://localhost/${section}` instead of `https://content.guardianapis.com/${section}`
+    if (process.env.ENV === 'test') {
+      return await this.axiosInstance.get(`${process.env.GUARDIAN_ENDPOINT}/${section}`, {
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        params: { 'api-key': process.env.GUARDIAN_API_KEY },
+      })
+    }
+
+    return await this.axiosInstance.get(`https://content.guardianapis.com/${section}`)
   }
 
   async asXML(xmlConfig: unknown) {
