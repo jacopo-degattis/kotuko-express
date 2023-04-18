@@ -39,6 +39,11 @@ describe('GET /lifeandstyle', () => {
     expect(res.statusCode).toBe(400);
   })
 
+  it('should return 400 status code', async() => {
+    const res = await agent.get('/LIFEANDSTYLE').send();
+    expect(res.statusCode).toBe(400);
+  })
+
   it('should return 404 status code', async() => {
     const res = await agent.get('/life-style').send();
     expect(res.statusCode).toBe(404);
