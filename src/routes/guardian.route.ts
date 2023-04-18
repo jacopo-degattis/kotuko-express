@@ -3,6 +3,6 @@ import * as guardianController from '../controllers/guardian.controller';
 
 const router = express.Router();
 
-router.get('/', guardianController.get);
+router.get('/:section', guardianController.get);
 
 export default router;
