@@ -45,7 +45,7 @@ class GuardianService {
       })
     }
 
-    return await this.axiosInstance.get(`https://content.guardianapis.com/${section}`)
+    return await this.axiosInstance.get(`/${section}`)
   }
 
   async asXML(xmlConfig: unknown) {
